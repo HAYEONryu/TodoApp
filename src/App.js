@@ -1,21 +1,51 @@
-//App.js
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-// src/pages/index.js를 통해서 한번에 import 할 수 있도록 함
-import Chap4 from "./pages/Chap4";
+// import { BrowserRouter, Route, Switch } from "react-router-dom";
+// import Chap4 from "./pages/Chap4";
+import TodoTemplate from "./components/TodoTemplate";
+import TodoInsert from "./components/TodoInsert";
+import TodoList from "./components/TodoList";
+import { useState, useRef, useCallback} from "../node_modules/react/cjs/react.development";
+
+
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/pages/Chap4" component={Chap4} />
-        {/* <Route exact path="/login" component={Login} /> */}
-        {/* //전달할 props가 있는 경우 아래와 같이
-        <Route exact path="/info" render={() => <Info userInfo={userInfo} />} /> */}
-        
-      </Switch>
-    </BrowserRouter>
-  );
-}
+  const [todos, setTodos] = useState([]);
+  const currentId = useRef(0);
+  const onInsert = useCallback(
+    (text) => {
+      const task ={
+        id: currentId.current,
+        text: text,
+        checked: false,
+      }
+      setTodos(todos.concat(task));
+      currentId.current+=1;
+    },[todos],);
 
+    const onRemove = useCallback(
+      (id) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+      },[todos],);
+
+    const handleToggle = useCallback(
+      (id)=>{
+        setTodos( todos.map((todo) =>
+            todo.id === id ? { ...todo, checked: !todo.checked } : todo,
+          ),
+        );
+      },
+      [todos],
+    );
+  return (
+    // <BrowserRouter>
+    //   <Switch>
+    //     <Route exact path="/pages/Chap4" component={Chap4} />
+    //   </Switch>
+    // </BrowserRouter>
+      <TodoTemplate>
+        <TodoInsert onInsert={onInsert}/>
+        <TodoList todos={todos} handleToggle={handleToggle} onRemove={onRemove}/>
+      </TodoTemplate>
+    );
+}
 export default App;
