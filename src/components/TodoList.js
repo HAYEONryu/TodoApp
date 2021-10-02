@@ -1,6 +1,8 @@
 // todos 배열을 props로 받아 온 후, map을 사용하여 여러 개의 TodoListItem으로 변환한다.
 import React from "react";
+import {List} from "react-virualized";
 import TodoListItem from "./TodoListItem";
+
 import './scss/TodoListItem.scss';
 
 const TodoList = ({todos, onRemove, handleToggle})=>{
@@ -12,4 +14,4 @@ const TodoList = ({todos, onRemove, handleToggle})=>{
         </div>
     );
 };
-export default TodoList;
+export default React.memo(TodoList);
